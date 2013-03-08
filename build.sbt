@@ -8,7 +8,7 @@ scalaVersion := "2.10.0"
 
 seq(SbtStartScript.startScriptForClassesSettings: _*)
 
-mainClass in (Compile, run) := Some("uk.bl.monitrix.bdt.server.Frontend")
+// mainClass in (Compile, run) := Some("uk.bl.monitrix.bdt.server.Frontend")
 
 libraryDependencies ++= Seq(
 	"com.rabbitmq" % "amqp-client" % "3.0.3",

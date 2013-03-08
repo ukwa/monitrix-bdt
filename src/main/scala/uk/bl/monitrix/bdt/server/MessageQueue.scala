@@ -12,9 +12,10 @@ import akka.actor.Props
 import akka.pattern.ask
 import akka.util.Timeout
 import scala.concurrent.Await
+import uk.bl.monitrix.bdt.Constants
 
-class MessageQueue(queueHost: String, queueName: String) {
-  
+class MessageQueue(queueHost: String, maxLogSize: Int) {
+
   implicit val ec = ExecutionContext.fromExecutorService(Executors.newCachedThreadPool())
   
   val factory = new ConnectionFactory
@@ -23,20 +24,20 @@ class MessageQueue(queueHost: String, queueName: String) {
   val connection = factory.newConnection 
   
   val channel = connection.createChannel
-  channel.queueDeclare(queueName, false, false, false, null)
+  channel.queueDeclare(Constants.FORWARD_QUEUE_NAME, false, false, false, null)
   
   val replyQueueName = channel.queueDeclare.getQueue
   val consumer = new QueueingConsumer(channel)
   channel.basicConsume(replyQueueName, true, consumer)
   
-  val responseActor = ActorSystem().actorOf(Props(new ResponseActor(consumer)), "response-actor")
+  val responseActor = ActorSystem().actorOf(Props(new ResponseActor(consumer, maxLogSize)), "response-actor")
   
   def publishURL(url: String) = {    
     val props = new BasicProperties.Builder()
       .replyTo(replyQueueName)
       .build
       
-    channel.basicPublish("", queueName, props, url.getBytes) 
+    channel.basicPublish("", Constants.FORWARD_QUEUE_NAME, props, url.getBytes) 
   }
   
   def getLog: List[String]  = {

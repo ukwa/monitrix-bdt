@@ -11,10 +11,19 @@ import scala.util.Properties
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class Frontend(messageQueue: MessageQueue) extends Plan {
+/**
+ * A simple HTTP frontend that accepts request in the form
+ * 
+ * http://<host>/ping/<URL-encoded-URI-to-ping>
+ * 
+ * The frontend exposes the 'logs' of the most recent ping requests at
+ * 
+ * http://<host>/log
+ * 
+ */
+class Frontend(messageQueue: MessageQueue, maxLogSize: Int) extends Plan {
   
-  def intent = {
-    
+  def intent = { 
     case GET(Path("/")) =>
       PlainTextContent ~> ResponseString("Nothing to see here. Move along.")
       
@@ -30,15 +39,25 @@ class Frontend(messageQueue: MessageQueue) extends Plan {
     }
   }
 }
- 
-object Frontend {  
-  def main(args: Array[String]) {
-    // Get a handle on the message queue
-    val messageQueue = new MessageQueue("62.218.164.156", "ukwa_block_detection")
-    
-    val port = Properties.envOrElse("PORT", "8080").toInt
-    
-    // Start the frontend in an embedded Jetty
-    Http.local(port).filter(new Frontend(messageQueue)).run
-  }
+
+/**
+ * A simple App to start the HTTP frontend. Takes three command-line arguments:
+ * 1. the hostname to bind to (default = localhost)
+ * 2. the port number for the HTTP process (default = 8080)
+ * 3. the size of the ping log to maintain in memory (default = 20)
+ */
+object Frontend extends App {  
+  
+  val hostname = if (args.length > 0) args(0) else "localhost"   
+  println("Binding to " + hostname)
+  
+  val port = if (args.length > 1) args(1).toInt else 8080
+  println("Starting on port " + port)
+  
+  val maxLogSize = if (args.length > 2) args(2).toInt else 20
+  println("Log size is " + maxLogSize)
+  
+  val messageQueue = new MessageQueue(hostname, maxLogSize)  
+  Http.local(port).filter(new Frontend(messageQueue, maxLogSize)).run
+  
 }

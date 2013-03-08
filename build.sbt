@@ -1,8 +1,12 @@
+import com.typesafe.sbt.SbtStartScript
+
 name := "monitrix-bdt"
 
 version := "0.1"
 
 scalaVersion := "2.10.0"
+
+seq(SbtStartScript.startScriptForClassesSettings: _*)
 
 mainClass in (Compile, run) := Some("uk.bl.monitrix.bdt.server.Frontend")
 

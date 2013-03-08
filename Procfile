@@ -1,1 +1,1 @@
-web: target/start uk.bl.monitrix.bdt.server.Frontend
+web: target/start uk.bl.monitrix.bdt.receiver.Main -b "0.0.0.0:$PORT"

@@ -7,6 +7,9 @@ import unfiltered.jetty.Http
 import unfiltered.response.ResponseString
 import unfiltered.request.Seg
 import java.net.URLDecoder
+import scala.util.Properties
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class Frontend(messageQueue: MessageQueue) extends Plan {
   
@@ -24,12 +27,14 @@ class Frontend(messageQueue: MessageQueue) extends Plan {
   }
 }
  
-object Frontend {
+object Frontend {  
   def main(args: Array[String]) {
     // Get a handle on the message queue
     val messageQueue = new MessageQueue("62.218.164.156", "ukwa_block_detection")
     
+    val port = Properties.envOrElse("PORT", "8080").toInt
+    
     // Start the frontend in an embedded Jetty
-    Http.local(80).filter(new Frontend(messageQueue)).run
+    Http.anylocal.filter(new Frontend(messageQueue)).run
   }
 }

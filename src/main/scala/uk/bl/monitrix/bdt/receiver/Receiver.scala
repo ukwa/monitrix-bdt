@@ -10,7 +10,7 @@ import akka.actor.PoisonPill
 class Receiver(numberOfActors: Int) {
 
   val factory = new ConnectionFactory
-  factory.setHost("localhost")
+  factory.setHost("62.218.164.156")
   
   val connection = factory.newConnection
   

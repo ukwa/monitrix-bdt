@@ -7,7 +7,7 @@ class MessageQueue(queueHost: String, queueName: String) {
   val factory = new ConnectionFactory
   factory.setHost(queueHost)
   
-  val connection = factory.newConnection
+  val connection = factory.newConnection 
   
   val channel = connection.createChannel
   channel.queueDeclare(queueName, false, false, false, null)

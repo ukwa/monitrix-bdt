@@ -30,6 +30,6 @@ object Frontend {
     val messageQueue = new MessageQueue("localhost", "ukwa_block_detection")
     
     // Start the frontend in an embedded Jetty
-    Http.local(8080).filter(new Frontend(messageQueue)).run
+    Http.local(80).filter(new Frontend(messageQueue)).run
   }
 }

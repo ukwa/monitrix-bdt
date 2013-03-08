@@ -4,3 +4,6 @@
 /.cache
 /.classpath
 /.project
+/build
+/project
+/target

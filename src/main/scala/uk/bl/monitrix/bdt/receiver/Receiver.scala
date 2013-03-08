@@ -26,7 +26,7 @@ class Receiver(numberOfActors: Int) {
   
 }
 
-object Main extends Application {
+object Main extends App {
   
   val NUMBER_OF_ACTORS = 5
    

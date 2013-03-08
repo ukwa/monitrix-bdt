@@ -35,6 +35,6 @@ object Frontend {
     val port = Properties.envOrElse("PORT", "8080").toInt
     
     // Start the frontend in an embedded Jetty
-    Http.anylocal.filter(new Frontend(messageQueue)).run
+    Http.local(port).filter(new Frontend(messageQueue)).run
   }
 }

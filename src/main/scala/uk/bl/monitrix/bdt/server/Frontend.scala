@@ -27,7 +27,7 @@ class Frontend(messageQueue: MessageQueue) extends Plan {
 object Frontend {
   def main(args: Array[String]) {
     // Get a handle on the message queue
-    val messageQueue = new MessageQueue("localhost", "ukwa_block_detection")
+    val messageQueue = new MessageQueue("62.218.164.156", "ukwa_block_detection")
     
     // Start the frontend in an embedded Jetty
     Http.local(80).filter(new Frontend(messageQueue)).run

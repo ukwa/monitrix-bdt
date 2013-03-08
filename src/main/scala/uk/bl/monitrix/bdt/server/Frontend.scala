@@ -24,6 +24,10 @@ class Frontend(messageQueue: MessageQueue) extends Plan {
       messageQueue.publishURL(unescaped)
       PlainTextContent ~> ResponseString("Queueing URL " + unescaped)      
     }
+    
+    case GET(Path("/log")) => {
+      PlainTextContent ~> ResponseString(messageQueue.getLog.mkString("\n"))
+    }
   }
 }
  

@@ -6,6 +6,7 @@ import akka.dispatch.Futures
 import com.rabbitmq.client.{Channel, Connection, QueueingConsumer}
 import dispatch.Http
 import scala.concurrent.{ExecutionContext, Future}
+import com.rabbitmq.client.AMQP.BasicProperties;
 
 /**
  * The PingActor sequentially picks messages from the message queue and 'pings' the 
@@ -22,6 +23,7 @@ class PingActor(connection: Connection, queueName: String ) extends Actor {
   val log = Logging(context.system, this)
   
   val channel = connection.createChannel
+  channel.basicQos(1)
   channel.queueDeclare(queueName, false, false, false, null)
   
   val consumer = new QueueingConsumer(channel)
@@ -37,7 +39,11 @@ class PingActor(connection: Connection, queueName: String ) extends Actor {
 	      val startTime = System.currentTimeMillis
 	      val request = dispatch.url(message)
 	      Http(request).onSuccess {
-	        case r => log.info("HTTP " + r.getStatusCode()  + " -- " + (System.currentTimeMillis - startTime) + "ms -- " + message)
+	        case r =>  {
+	          val response = "HTTP " + r.getStatusCode()  + " -- " + (System.currentTimeMillis - startTime) + "ms -- " + message
+	          channel.basicPublish("", delivery.getProperties.getReplyTo, null, response.getBytes)
+	          log.info(response)
+	        }
 	      }
 	    }
       } catch {

@@ -1,9 +1,9 @@
 # monitrix: Blocking Detection Tool
 
 monitrix-bdt is a tool in the spirit of [Down For Everyone Or Just Me](http://www.downforeveryoneorjustme.com/). If you 
-encounter a URL that is blocked from your site, you can post this URL to monitrix-bdt, and it will try to reach the URL
+encounter a URL that is blocked from your location, you can post this URL to monitrix-bdt, and it will try to reach the URL
 from a second (physically separated) server. If the URL is not reachable for montrix-bdt either, there's a good chance
-the URL is actually down. Otherwise, it's likely that your site is blocked by the host.
+the URL is actually down. Otherwise, it's likely that your location is being blocked by the host.
 
 The montrix-bdt project consists of two parts:
 
